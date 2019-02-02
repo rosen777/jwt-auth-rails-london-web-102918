@@ -1,8 +1,8 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authorized, only: [:create]
 
-  def profile
-    render json: { user: UserSerializer.new(current_user) }, status: :accepted
+  def index
+    @users = User.all
   end
 
   def create
@@ -13,6 +13,24 @@ class Api::V1::UsersController < ApplicationController
     else
       render json: { error: 'failed to create user' }, status: :not_acceptable
     end
+  end
+
+    def show
+        @user = User.find(params[:id])
+        render json: {user_details: @user}
+    end
+
+    def update
+        @user.update(user_params)
+        if @user.save
+         render json: @user, status: :accepted
+        else
+         render json: { errors: @user.errors.full_messages }, status: :unprocessible_entity
+        end
+    end
+
+  def profile
+    render json: { user: UserSerializer.new(current_user) }, status: :accepted
   end
 
   private

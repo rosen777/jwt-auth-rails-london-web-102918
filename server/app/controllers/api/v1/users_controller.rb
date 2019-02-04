@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authorized, only: [:create]
+  skip_before_action :authorized, only: [:create, :signin]
 
   def index
     @users = User.all
@@ -33,9 +33,28 @@ class Api::V1::UsersController < ApplicationController
     render json: { user: UserSerializer.new(current_user) }, status: :accepted
   end
 
+    def validate
+      @user = current_user
+      if @user
+        render json: {username: @user.username, token: encode_token({id: @user.id})}
+      else
+        render json: {error: "User not found."}, status: 404
+      end
+    end
+
+    def signin
+    @user = User.find_by(username: params[:username])
+    if @user && @user.authenticate(params[:password])
+      render json: {token: encode_token({id: @user.id})}
+    else
+      render json: {error: "Username/password combination invalid."}, status: 404
+    end
+  end
+
+
   private
 
   def user_params
-    params.permit(:username, :password, :bio, :avatar)
+    params.permit(:username, :password)
   end
 end

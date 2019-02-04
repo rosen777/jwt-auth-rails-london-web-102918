@@ -1,9 +1,2 @@
-# 15.times do
-#   User.create(
-#     username: Faker::Friends.character, password: 'hi', avatar: Faker::Fillmurray.image, bio: Faker::Friends.quote
-#   )
+u1 = User.create(username: 'test', password: '123' )
 
-User.create(username: 'test', password: '123')
-
-
-end

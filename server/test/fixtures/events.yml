@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  capacity: 1
+  image: MyString
+  date: 2019-02-04 15:02:35
+  latitude: 9.99
+  longitude: 9.99
+  user: one
+
+two:
+  title: MyString
+  capacity: 1
+  image: MyString
+  date: 2019-02-04 15:02:35
+  latitude: 9.99
+  longitude: 9.99
+  user: two

@@ -1,5 +1,4 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authorized, only: [:create, :signin]
 
   def index
     @users = User.all
@@ -45,9 +44,17 @@ class Api::V1::UsersController < ApplicationController
     def signin
     @user = User.find_by(username: params[:username])
     if @user && @user.authenticate(params[:password])
-      render json: {token: encode_token({id: @user.id})}
+      render json: {username: @user.username, token: encode_token({id: @user.id})}
     else
       render json: {error: "Username/password combination invalid."}, status: 404
+    end
+  end
+
+  def get_events
+    @user = current_user
+    
+    if @user 
+      render json: @user.events
     end
   end
 

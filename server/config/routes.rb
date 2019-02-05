@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       resources :events, only: [:create]
       post 'signin', to: 'users#signin'
       get 'validate', to: 'users#validate'
-      get 'joined_events', to: 'users_get_joined_events'
+      get 'joined', to: 'users#get_events'
     end
   end
 end

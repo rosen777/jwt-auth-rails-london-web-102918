@@ -7,8 +7,8 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.create(user_params)
     if @user.valid?
-      @token = encode_token(user_id: @user.id)
-      render json: { user: UserSerializer.new(@user), jwt: @token }, status: :created
+      @token = encode_token(id: @user.id)
+      render json: { username: @user.username, token: @token }, status: :created
     else
       render json: { error: 'failed to create user' }, status: :not_acceptable
     end
@@ -52,10 +52,12 @@ class Api::V1::UsersController < ApplicationController
 
   def get_events
     @user = current_user
-    
+
     if @user 
-      render json: @user.events
-    end
+        render json: @user.events
+     else
+       render json: {error: "User not found."}, status: 404
+      end
   end
 
 

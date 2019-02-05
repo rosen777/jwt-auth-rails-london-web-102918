@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
 
   def encode_token(payload) #{ user_id: 2 }
-    JWT.encode(payload, 'my_s3cr3t') #issue a token, store payload in token
+    JWT.encode(payload, ENV["JWT_SECRET"]) #issue a token, store payload in token
   end
 
   # def auth_header
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::API
 
   def decoded_token(token)
       begin
-      JWT.decode(token, 'my_s3cr3t').first
+      JWT.decode(token, ENV["JWT_SECRET"]).first
       rescue JWT::DecodeError
         {}
       end

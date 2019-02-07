@@ -5,35 +5,50 @@ class Api::V1::EventsController < ApplicationController
     def index
         @events = Event.all
 
-        @event_with_guests = @events.map {|event| 
-        {
-            host: event.user_id,
-            guests: event.users,
-            title: event.title,
-            date: event.date,
-            latitude: event.latitude,
-            longitude: event.longitude,
-            capacity: event.capacity,
-            image: event.image
-        }
-    }
+        # @event_with_guests = @events.map {|event| 
+        # {   
+        #     id: event
+        #     host: event.user_id,
+        #     guests: event.users,
+        #     title: event.title,
+        #     date: event.date,
+        #     latitude: event.latitude,
+        #     longitude: event.longitude,
+        #     capacity: event.capacity,
+        #     image: event.image
+        # }
+    # }
 
-        render json: @event_with_guests
+        render json: @events.as_json(include:{users: {
+            except: [:password_digest]
+        }})
     end
 
     def create
+
         @event = Event.new(title: params[:title], capacity: params[:capacity], image: params[:image], date: params[:date],latitude: params[:latitude], longitude: params[:longitude], user_id: current_user.id )
 
         if @event.save
             render json: @event
+
         else
             render json: {error: 'Unable to create event.'}, status: 400
         end
+
     end
 
     def show
         @event_with_guests = Event.find(params[:id])
         render json: {event_details: @event}
+    end
+
+    def joinevent
+
+        joined_user_event = UserEvent.create!(user_id: current_user.id,
+        event_id: params[:event_id])
+
+        joined_user_event.save
+
     end
 
     def update

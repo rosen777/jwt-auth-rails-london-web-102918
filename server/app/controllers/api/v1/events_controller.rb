@@ -26,7 +26,7 @@ class Api::V1::EventsController < ApplicationController
 
     def create
 
-        @event = Event.new(title: params[:title], capacity: params[:capacity], image: params[:image], date: params[:date],latitude: params[:latitude], longitude: params[:longitude], user_id: current_user.id )
+        @event = Event.new(title: params[:title], capacity: params[:capacity], image: params[:image], date: params[:date],latitude: params[:latitude], longitude: params[:longitude], host: params[:host], user_id: current_user.id )
 
         if @event.save
             render json: @event
@@ -60,6 +60,12 @@ class Api::V1::EventsController < ApplicationController
 
          user_event.destroy
     end
+    
+    def joined_user_event
+        joined_event = UserEvent.find_by(:id => current_user.id)
+
+    end
+
 
     def update
         @event.update(title: params[:title], capacity: params[:capacity], image: params[:image], date: params[:date],latitude: params[:latitude], longitude: params[:longitude], user_id: current_user.id )
@@ -76,6 +82,18 @@ class Api::V1::EventsController < ApplicationController
         @event.delete
         head :no_content
     end
+
+    def deleteevent
+        @deleted_user_event = UserEvent.find_by(:event_id => params[:event_id])
+
+         @deleted_event = Event.find_by(:id => params[:id]
+         )
+
+        @deleted_user_event.destroy
+        @deleted_event.destroy
+    end
+
+
 
     private
 

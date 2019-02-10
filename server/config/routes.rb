@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       get 'validate', to: 'users#validate'
       get 'joined', to: 'users#get_events'
       post 'joinevent', to: 'events#joinevent'
+      delete 'cancelevent', to: 'events#cancelevent'
     end
   end
 end

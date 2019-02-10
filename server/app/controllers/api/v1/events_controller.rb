@@ -38,8 +38,12 @@ class Api::V1::EventsController < ApplicationController
     end
 
     def show
-        @event_with_guests = Event.find(params[:id])
-        render json: {event_details: @event}
+        @event = Event.find(params[:id])
+
+
+        render json: @event.as_json(include:{users: {
+            except: [:password_digest]
+        }})
     end
 
     def joinevent
@@ -49,6 +53,12 @@ class Api::V1::EventsController < ApplicationController
 
         joined_user_event.save
 
+    end
+
+    def cancelevent
+        user_event = UserEvent.find_by(:user_id => current_user.id, :event_id => params[:event_id])
+
+         user_event.destroy
     end
 
     def update

@@ -61,7 +61,12 @@ class Api::V1::UsersController < ApplicationController
     @user = current_user
 
     if @user 
-        render json: @user.events
+        render json: @user.events.as_json(include: {
+          users: {
+            except:
+            [:password_digest]
+          }
+        })
      else
        render json: {error: "User not found."}, status: 404
       end

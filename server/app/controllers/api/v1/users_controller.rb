@@ -27,12 +27,27 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def update
-        @user.update(user_params)
+      if current_user
+        @user = current_user
+        @user.update(:username => params[:username])
         if @user.save
          render json: @user, status: :accepted
         else
          render json: { errors: @user.errors.full_messages }, status: :unprocessible_entity
         end
+      end
+    end
+
+    def updatepassword
+      if current_user
+        @user = current_user
+        @user.update(:username => @user.username,:password => params[:password])
+        if @user.save
+         render json: @user, status: :accepted
+        else
+         render json: { errors: @user.errors.full_messages }, status: :unprocessible_entity
+        end
+      end
     end
 
   def profile
